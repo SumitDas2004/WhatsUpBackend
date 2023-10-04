@@ -14,32 +14,33 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: 'https://whatsup-5lru.onrender.com',
+    origin: process.env.FRONTEND_URL,
   },
 });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors({ origin: 'https://whatsup-5lru.onrender.com' }));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 app.use("/auth", require("./Routes/auth"));
 app.use("/modifyfriends", require("./Routes/Modifyfirends"));
 app.use("/communicate", require("./Routes/communicate"));
 
-const onlineUsers = new Set();
+let onlineUsers = [];
 
 io.on("connection", (socket) => {
   socket.on("add-user", (data) => {
-    onlineUsers.add(data);
+    onlineUsers.push({email:data, socketId:socket.id});
     socket.join(data);
-    io.sockets.emit("online-users", [...onlineUsers]);
+    io.sockets.emit("online-users", onlineUsers);
+    console.log(onlineUsers)
   });
-  socket.on("disconnect", () => {});
+  socket.on("disconnect", () => {
+    onlineUsers = onlineUsers.filter((e)=>{
+      return e.socketId!==socket.id;
+    })
+    io.sockets.emit("online-users", onlineUsers);
+  });
 
-  socket.on("remove-user", (data) => {
-    onlineUsers.delete(data);
-    socket.leave(data);
-    io.sockets.emit("online-users", [...onlineUsers]);
-  });
 
   socket.on("join-room", (roomId) => {
     socket.join(roomId);
