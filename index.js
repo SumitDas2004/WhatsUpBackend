@@ -14,12 +14,12 @@ const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL+process.env.FRONTEND_PORT,
+    origin: 'https://whatsup-5lru.onrender.com',
   },
 });
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use(cors({ origin: process.env.FRONTEND_URL+process.env.FRONTEND_PORT }));
+app.use(cors({ origin: 'https://whatsup-5lru.onrender.com' }));
 
 app.use("/auth", require("./Routes/auth"));
 app.use("/modifyfriends", require("./Routes/Modifyfirends"));
@@ -66,19 +66,6 @@ io.on("connection", (socket) => {
 });
 
 
-
-const __dirname1 = path.resolve();
-if(process.env.NODE_ENV==='production'){
-  app.use(express.static(path.join(__dirname1, '/frontend/dist')))
-
-  app.get('*', (req, res)=>{
-    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"));
-  })
-}else{
-  app.get("/",(req, res)=>{
-    res.send("API is running successfully");
-  })
-}
 
 httpServer.listen(port, () => {
   console.log(`App running in port ${process.env.PORT}`);
