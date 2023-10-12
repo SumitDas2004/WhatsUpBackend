@@ -30,7 +30,7 @@ app.post(
   "/signup",
   [
     check("email", "Invalid email format.").isEmail(),
-    check("password", "Invalid password format.").isStrongPassword(),
+    check("password", "Invalid password format.Password must contain atleast one Uppercase letter, one lower case letter, one number and one special character. Password must contain atleast 8 characters.").isStrongPassword(),
   ],
   async (req, res) => {
     try {

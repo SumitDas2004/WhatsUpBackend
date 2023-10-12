@@ -24,7 +24,7 @@ const userSchema = new Schema({
     },
     picture:{
         type:String,
-        default:'https://shorturl.at/cjtyQ'
+        default:'https://res.cloudinary.com/dgajofeja/image/upload/v1697100260/akjmt1tl070y3ss6qodq.png'
     },
     description:{
         type:String,

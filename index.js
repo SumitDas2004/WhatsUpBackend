@@ -32,7 +32,6 @@ io.on("connection", (socket) => {
     onlineUsers.push({email:data, socketId:socket.id});
     socket.join(data);
     io.sockets.emit("online-users", onlineUsers);
-    console.log(onlineUsers)
   });
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((e)=>{
